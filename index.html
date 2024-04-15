@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Nickname and MSISDN Storage</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #f4f4f4;
+      padding: 20px;
+    }
+    .container {
+      max-width: 600px;
+      margin: 0 auto;
+      background-color: #fff;
+      padding: 20px;
+      border-radius: 8px;
+      box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    }
+    h1, h2 {
+      text-align: center;
+    }
+    form {
+      margin-top: 20px;
+    }
+    label {
+      display: block;
+      margin-bottom: 5px;
+    }
+    input[type="text"] {
+      width: 100%;
+      padding: 8px;
+      margin-bottom: 10px;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+    }
+    button {
+      background-color: #4caf50;
+      color: white;
+      padding: 10px 20px;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+    }
+    button:hover {
+      background-color: #45a049;
+    }
+    .nickname-container {
+      margin-top: 20px;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>Nickname and MSISDN Storage</h1>
+    <form id="nicknameForm">
+      <label for="nickname">Nickname:</label>
+      <input type="text" id="nickname" name="nickname" required>
+      <label for="msisdn">MSISDN:</label>
+      <input type="text" id="msisdn" name="msisdn" required>
+      <button type="submit">Submit</button>
+    </form>
+    <div class="nickname-container" id="nicknameContainer">
+      <!-- Nicknames and MSISDNs will be displayed here -->
+    </div>
+  </div>
+
+  <script>
+    // Load saved data when the page loads
+    window.onload = function() {
+      loadSavedData();
+    };
+
+    // Function to load saved data from local storage
+    function loadSavedData() {
+      const savedData = JSON.parse(localStorage.getItem('nicknameMSISDN')) || [];
+      savedData.forEach(entry => addNicknameAndMSISDN(entry.nickname, entry.msisdn));
+    }
+
+    // Function to save data to local storage
+    function saveDataToLocalStorage(nickname, msisdn) {
+      const savedData = JSON.parse(localStorage.getItem('nicknameMSISDN')) || [];
+      savedData.push({ nickname, msisdn });
+      localStorage.setItem('nicknameMSISDN', JSON.stringify(savedData));
+    }
+
+    // Event listener for form submission
+    document.getElementById('nicknameForm').addEventListener('submit', function(event) {
+      event.preventDefault();
+      const nickname = document.getElementById('nickname').value;
+      const msisdn = document.getElementById('msisdn').value;
+      addNicknameAndMSISDN(nickname, msisdn);
+      saveDataToLocalStorage(nickname, msisdn);
+      document.getElementById('nicknameForm').reset();
+    });
+
+    // Function to display nickname and MSISDN
+    function addNicknameAndMSISDN(nickname, msisdn) {
+      const container = document.getElementById('nicknameContainer');
+      const nicknameElement = document.createElement('div');
+      nicknameElement.innerHTML = `
+        <strong>Nickname:</strong> ${nickname} | <strong>MSISDN:</strong> ${msisdn}
+      `;
+      container.appendChild(nicknameElement);
+    }
+  </script>
+</body>
+</html>
